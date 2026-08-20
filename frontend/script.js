@@ -1,4 +1,4 @@
-const API_ORIGIN = "http://localhost:3001";
+const API_ORIGIN = "https://extension-crud-operation.onrender.com";
 const API_URL = `${API_ORIGIN}/api/extensions`;
 
 const container = document.getElementById("extensions-container");
