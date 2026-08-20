@@ -70,16 +70,23 @@ const seedData = async () => {
             const relativeLogoPath =
                 item.logo.replace(/^\.\//, "");
 
-            const absoluteLogoPath =
+            let absoluteLogoPath =
                 path.resolve(
                     __dirname,
                     "..",
                     relativeLogoPath
                 );
 
+            if (!fs.existsSync(absoluteLogoPath)) {
+                absoluteLogoPath = path.resolve(
+                    __dirname,
+                    "../frontend",
+                    relativeLogoPath
+                );
+            }
+
             // Check logo exists
             if (!fs.existsSync(absoluteLogoPath)) {
-
                 console.warn(
                     `⚠️ Warning: Logo file not found at ${absoluteLogoPath}. Skipping.`
                 );
