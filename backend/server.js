@@ -2,7 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
 const path = require("path");
-const { initDb } = require("./config/db");
+const { initDb, query } = require("./config/db");
 const extensionRoutes = require("./routes/extensionRoutes");
 
 // Load environment variables from .env
@@ -26,12 +26,26 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.get("/api/health", (req, res) => {
-    res.status(200).json({
-        success: true,
-        message: "Extension Manager API is running healthy",
-        timestamp: new Date().toISOString()
-    });
+app.get("/api/health", async (req, res) => {
+    try {
+        await query("SELECT 1");
+        res.status(200).json({
+            success: true,
+            message: "Extension Manager API is running healthy",
+            dbConnected: true,
+            dbHost: process.env.DATABASE_URL ? "DATABASE_URL configured" : (process.env.DB_HOST || "localhost"),
+            timestamp: new Date().toISOString()
+        });
+    } catch (dbErr) {
+        res.status(200).json({
+            success: true,
+            message: "API is up but DB connection failed",
+            dbConnected: false,
+            dbError: dbErr.message || String(dbErr),
+            dbHost: process.env.DATABASE_URL ? "DATABASE_URL configured" : (process.env.DB_HOST || "localhost"),
+            timestamp: new Date().toISOString()
+        });
+    }
 });
 
 app.use("/api/extensions", extensionRoutes);
@@ -45,7 +59,7 @@ app.use((req, res) => {
 });
 
 app.use((err, req, res, next) => {
-    console.error("API Error:", err.message);
+    console.error("API Error:", err);
 
     // Handle Multer specific errors
     if (err.name === "MulterError") {
@@ -70,7 +84,8 @@ app.use((err, req, res, next) => {
 
     res.status(statusCode).json({
         success: false,
-        message: err.message || "Internal Server Error"
+        message: err.message || "Internal Server Error",
+        error: err.message || String(err)
     });
 });
 const startServer = async () => {
