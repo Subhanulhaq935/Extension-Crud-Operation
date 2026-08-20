@@ -7,13 +7,30 @@ dotenv.config({
 });
 
 
-const pool = new Pool({
-    host: process.env.DB_HOST || "localhost",
-    port: parseInt(process.env.DB_PORT, 10) || 5432,
-    database: process.env.DB_NAME || "extension_manager_crud",
-    user: process.env.DB_USER || "postgres",
-    password: process.env.DB_PASSWORD,
-});
+const isProduction = process.env.NODE_ENV === "production" || Boolean(process.env.DATABASE_URL);
+
+const poolConfig = process.env.DATABASE_URL
+    ? {
+          connectionString: process.env.DATABASE_URL,
+          ssl: {
+              rejectUnauthorized: false
+          }
+      }
+    : {
+          host: process.env.DB_HOST || "localhost",
+          port: parseInt(process.env.DB_PORT, 10) || 5432,
+          database: process.env.DB_NAME || "extension_manager_crud",
+          user: process.env.DB_USER || "postgres",
+          password: process.env.DB_PASSWORD,
+          ssl:
+              isProduction &&
+              process.env.DB_HOST !== "localhost" &&
+              process.env.DB_HOST !== "127.0.0.1"
+                  ? { rejectUnauthorized: false }
+                  : false
+      };
+
+const pool = new Pool(poolConfig);
 
 
 pool.on("connect", () => {
