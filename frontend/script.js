@@ -38,3 +38,21 @@ let allExtensions = [];
 let currentFilter = "all";
 let currentSearchQuery = "";
 let pendingDeletedId = null;
+
+function showToast(message, type = "success") {
+    const toast = document.createElement("div");
+    toast.className = `toast ${type}`;
+
+    const icon = type === "success" ? "✓" : "⚠";
+    toast.innerHTML = `<span>${icon}</span> <span>${message}</span>`;
+
+    toastContainer.appendChild(toast);
+
+    setTimeout(() => {
+        toast.style.opacity = "0";
+        toast.style.transform = "translateY(10px)";
+        toast.style.transition = "all 0.3s ease";
+
+        setTimeout(() => toast.remove(), 300);
+    }, 3500);
+}
