@@ -307,6 +307,7 @@ const deleteExtension = async (req, res, next) => {
 module.exports = {
     getAllExtensions,
     getExtensionById,
+    getExtensionLogo,
     createExtension,
     updateExtension,
     deleteExtension
