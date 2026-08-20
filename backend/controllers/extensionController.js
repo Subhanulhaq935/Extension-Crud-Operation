@@ -14,3 +14,26 @@ const parseIsActive = (val, defaultValue = true) => {
 
     return defaultValue;
 };
+
+const getAllExtensions = async (req, res, next) => {
+    try {
+        const result = await query(
+            "SELECT id, name, description, is_active FROM extensions ORDER BY id ASC"
+        );
+
+        const extensions = result.rows.map((row) => ({
+            id: row.id,
+            logo: `/api/extensions/${row.id}/logo`,
+            name: row.name,
+            description: row.description,
+            isActive: row.is_active
+        }));
+
+        res.status(200).json({
+            success: true,
+            data: extensions
+        });
+    } catch (error) {
+        next(error);
+    }
+};
