@@ -27,13 +27,20 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.get("/api/health", async (req, res) => {
+    const dbUrl =
+        process.env.DATABASE_URL ||
+        process.env.DATABASE_URI ||
+        process.env.DB_URL ||
+        process.env.POSTGRES_URL ||
+        process.env.PG_URL;
+
     try {
         await query("SELECT 1");
         res.status(200).json({
             success: true,
             message: "Extension Manager API is running healthy",
             dbConnected: true,
-            dbHost: process.env.DATABASE_URL ? "DATABASE_URL configured" : (process.env.DB_HOST || "localhost"),
+            dbHost: dbUrl ? "Cloud Database URL configured" : (process.env.DB_HOST || "localhost"),
             timestamp: new Date().toISOString()
         });
     } catch (dbErr) {
@@ -42,7 +49,8 @@ app.get("/api/health", async (req, res) => {
             message: "API is up but DB connection failed",
             dbConnected: false,
             dbError: dbErr.message || String(dbErr),
-            dbHost: process.env.DATABASE_URL ? "DATABASE_URL configured" : (process.env.DB_HOST || "localhost"),
+            dbHost: dbUrl ? "Cloud Database URL configured" : (process.env.DB_HOST || "localhost"),
+            envKeysPresent: Object.keys(process.env).filter(k => k.includes("DB") || k.includes("POSTGRES") || k.includes("DATA")),
             timestamp: new Date().toISOString()
         });
     }

@@ -7,11 +7,19 @@ dotenv.config({
 });
 
 
-const isProduction = process.env.NODE_ENV === "production" || Boolean(process.env.DATABASE_URL);
+const dbUrl =
+    process.env.DATABASE_URL ||
+    process.env.DATABASE_URI ||
+    process.env.DB_URL ||
+    process.env.POSTGRES_URL ||
+    process.env.PG_URL;
 
-const poolConfig = process.env.DATABASE_URL
+const isProduction =
+    process.env.NODE_ENV === "production" || Boolean(dbUrl);
+
+const poolConfig = dbUrl
     ? {
-          connectionString: process.env.DATABASE_URL,
+          connectionString: dbUrl,
           ssl: {
               rejectUnauthorized: false
           }
