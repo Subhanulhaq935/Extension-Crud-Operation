@@ -5,8 +5,8 @@ const container = document.getElementById("extensions-container");
 const filterButtons = document.querySelectorAll(".filter-button");
 const searchInput = document.getElementById("search-input");
 const searchClearBtn = document.getElementById("search-clear");
-const extensionCountE1 = document.getElementById("extension-count");
-const emptyStateE1 = document.getElementById("empty-state");
+const extensionCountEl = document.getElementById("extension-count");
+const emptyStateEl = document.getElementById("empty-state");
 
 const modalOverlay = document.getElementById("extension-modal");
 const modalTitle = document.getElementById("modal-title");
@@ -37,7 +37,7 @@ const toastContainer = document.getElementById("toast-container");
 let allExtensions = [];
 let currentFilter = "all";
 let currentSearchQuery = "";
-let pendingDeletedId = null;
+let pendingDeleteId = null;
 
 function showToast(message, type = "success") {
     const toast = document.createElement("div");
@@ -81,7 +81,7 @@ async function init_data() {
         console.error("Error fetching extensions from API:", error);
 
         showToast(
-            "Could not connect to PostgreSQL backend. Ensure server is running on port 5000.",
+            "Could not connect to backend server. Ensure server is running on port 3001.",
             "error"
         );
 
