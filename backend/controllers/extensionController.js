@@ -278,3 +278,36 @@ const updateExtension = async (req, res, next) => {
         next(error);
     }
 };
+
+const deleteExtension = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+
+        const result = await query(
+            "DELETE FROM extensions WHERE id = $1 RETURNING id",
+            [id]
+        );
+
+        if (result.rowCount === 0) {
+            return res.status(404).json({
+                success: false,
+                message: `Extension with ID ${id} not found`
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            message: "Extension deleted successfully"
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+module.exports = {
+    getExtensions,
+    getExtension,
+    createExtension,
+    updateExtension,
+    deleteExtension
+};
