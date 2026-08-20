@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Extension Manager</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+    <div class="app-container">
+        <header class="header">
+            <div class="header-left">
+                <h1 class="page-title">Extension List</h1>
+                <span class="extension-count" id="extension-count">0 extensions</span>
+            </div>
+
+            <div class="header-right">
+                <!-- Search bar -->
+                <div class="search-box">
+                    <svg class="search-icon" viewBox="0 0 24 24" width="16" height="16" stroke="currentColor"
+                        stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                    <input type="text" id="search-input" placeholder="Search extensions..." autocomplete="off">
+                    <button id="search-clear" class="search-clear" style="display: none;">&times;</button>
+                </div>
+
+                <!-- Filter buttons -->
+                <div class="filter-buttons">
+                    <button class="filter-button active" data-filter="all">All</button>
+                    <button class="filter-button" data-filter="active">Active</button>
+                    <button class="filter-button" data-filter="inactive">Inactive</button>
+                </div>
+
+                <!-- Add Extension Button -->
+                <button id="btn-add-extension" class="btn-primary">
+                    <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2.5"
+                        fill="none">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                    Add Extension
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Cards Grid -->
+        <main id="extensions-container" class="extensions-grid">
+            <!-- Dynamic cards will be injected here -->
+        </main>
+
+        <!-- Empty state placeholder -->
+        <div id="empty-state" class="empty-state" style="display: none;">
+            <div class="empty-icon">🧩</div>
+            <h3 class="empty-title">No extensions found</h3>
+            <p class="empty-desc">Try adjusting your search query or filter, or add a new extension.</p>
+        </div>
+    </div>
+
+    <!-- Modal for Add / Edit Extension -->
+    <div id="extension-modal" class="modal-overlay" aria-hidden="true">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h2 id="modal-title" class="modal-heading">Add New Extension</h2>
+                <button id="modal-close" class="modal-close-btn" aria-label="Close modal">&times;</button>
+            </div>
+
+            <form id="extension-form" class="modal-form">
+                <input type="hidden" id="form-extension-id" value="">
+
+                <!-- Name input -->
+                <div class="form-group">
+                    <label for="form-name" class="form-label">Extension Name <span class="required">*</span></label>
+                    <input type="text" id="form-name" class="form-input" placeholder="e.g. SpeedBoost" required
+                        maxlength="100">
+                </div>
+
+                <!-- Description input -->
+                <div class="form-group">
+                    <label for="form-description" class="form-label">Description <span class="required">*</span></label>
+                    <textarea id="form-description" class="form-textarea" rows="3"
+                        placeholder="Briefly describe what this extension does..." required></textarea>
+                </div>
+
+                <!-- Logo upload -->
+                <div class="form-group">
+                    <label class="form-label">Logo Image <span id="logo-required-marker"
+                            class="required">*</span></label>
+                    <div class="file-upload-wrapper">
+                        <div class="logo-preview-box" id="logo-preview-box">
+                            <img id="logo-preview-img" src="" alt="Preview" style="display: none;">
+                            <span id="logo-preview-placeholder">No file chosen</span>
+                        </div>
+                        <label for="form-logo" class="btn-file-choose">
+                            Choose File
+                            <input type="file" id="form-logo" accept="image/svg+xml,image/png,image/jpeg,image/webp">
+                        </label>
+                    </div>
+                    <small class="form-help-text">Accepted formats: SVG, PNG, JPEG, WebP (Max: 5MB)</small>
+                </div>
+
+                <!-- Active Status Toggle -->
+                <div class="form-group form-group-inline">
+                    <div>
+                        <label class="form-label" style="margin-bottom: 2px;">Active Status</label>
+                        <small class="form-help-text">Enable extension immediately upon saving</small>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="form-is-active" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
+                <!-- Modal Actions -->
+                <div class="modal-actions">
+                    <button type="button" id="modal-cancel-btn" class="btn-secondary">Cancel</button>
+                    <button type="submit" id="modal-submit-btn" class="btn-primary">Save Extension</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Confirm Delete Modal -->
+    <div id="delete-modal" class="modal-overlay" aria-hidden="true">
+        <div class="modal-card modal-card-sm">
+            <div class="modal-header">
+                <h2 class="modal-heading">Delete Extension</h2>
+                <button id="delete-modal-close" class="modal-close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete <strong id="delete-extension-name">this extension</strong>? This will
+                    permanently remove it and its stored logo from PostgreSQL.</p>
+            </div>
+            <div class="modal-actions">
+                <button type="button" id="delete-cancel-btn" class="btn-secondary">Cancel</button>
+                <button type="button" id="delete-confirm-btn" class="btn-danger">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications Container -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
+
