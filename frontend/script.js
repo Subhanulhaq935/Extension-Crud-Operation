@@ -24,6 +24,16 @@ const logoPreviewPlaceholder = document.getElementById("logo-preview-placeholder
 const logoRequiredMarker = document.getElementById("logo-required-marker");
 const btnAddExtension = document.getElementById("btn-add-extension");
 
+
+const deleteModal = document.getElementById("delete-modal");
+const deleteModalCloseBtn = document.getElementById("delete-modal-close");
+const deleteCancelBtn = document.getElementById("delete-cancel-btn");
+const deleteConfirmBtn = document.getElementById("delete-confirm-btn");
+const deleteExtensionName = document.getElementById("delete-extension-name");
+
+
+const toastContainer = document.getElementById("toast-container");
+
 let allExtensions = [];
 let currentFilter = "all";
 let currentSearchQuery = "";
