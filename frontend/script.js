@@ -14,6 +14,15 @@ const modalCloseBtn = document.getElementById("modal-close");
 const modalCancelBtn = document.getElementById("modal-cancel-btn");
 const modalSubmitBtn = document.getElementById("modal-submit-btn");
 const extensionForm = document.getElementById("extension-form");
+const formExtensionId = document.getElementById("form-extension-id");
+const formName = document.getElementById("form-name");
+const formDescription = document.getElementById("form-description");
+const formLogo = document.getElementById("form-logo");
+const formIsActive = document.getElementById("form-is-active");
+const logoPreviewImg = document.getElementById("logo-preview-img");
+const logoPreviewPlaceholder = document.getElementById("logo-preview-placeholder");
+const logoRequiredMarker = document.getElementById("logo-required-marker");
+const btnAddExtension = document.getElementById("btn-add-extension");
 
 let allExtensions = [];
 let currentFilter = "all";
