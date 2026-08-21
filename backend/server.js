@@ -2,17 +2,17 @@ const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
 const path = require("path");
+const swaggerUi = require("swagger-ui-express");
+const swaggerSpec = require("./config/swagger");
 const { initDb, query } = require("./config/db");
 const extensionRoutes = require("./routes/extensionRoutes");
 
-// Load environment variables from .env
 dotenv.config({
     path: path.resolve(__dirname, ".env")
 });
 
 const app = express();
 const PORT = process.env.PORT || 3001;
-
 
 app.use(
     cors({
@@ -22,10 +22,21 @@ app.use(
     })
 );
 
-// Body parsers
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+/**
+ * @swagger
+ * /api/health:
+ *   get:
+ *     summary: API and Database Health Check
+ *     tags: [System]
+ *     responses:
+ *       200:
+ *         description: Health check status
+ */
 app.get("/api/health", async (req, res) => {
     const dbUrl =
         process.env.DATABASE_URL ||
@@ -96,6 +107,7 @@ app.use((err, req, res, next) => {
         error: err.message || String(err)
     });
 });
+
 const startServer = async () => {
     try {
         await initDb();
@@ -103,8 +115,9 @@ const startServer = async () => {
         app.listen(PORT, () => {
             console.log("===========================================");
             console.log("Extension Manager Backend Server Running");
-            console.log(`URL: http://localhost:${PORT}`);
-            console.log(`API: http://localhost:${PORT}/api/extensions`);
+            console.log(`URL:  http://localhost:${PORT}`);
+            console.log(`API:  http://localhost:${PORT}/api/extensions`);
+            console.log(`Docs: http://localhost:${PORT}/api-docs`);
             console.log("===========================================");
         });
     } catch (error) {
