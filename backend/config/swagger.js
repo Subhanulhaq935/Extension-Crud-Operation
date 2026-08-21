@@ -12,10 +12,11 @@ const swaggerDefinition = {
     },
     servers: [
         {
-            url: "http://localhost:3001",
-            description: "Local Development Server"
+            url: "/",
+            description: "Current Server (Auto-detected for Local & Production)"
         }
     ],
+
     components: {
         schemas: {
             Extension: {
